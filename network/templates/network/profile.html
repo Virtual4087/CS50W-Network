@@ -1,0 +1,16 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div id="profile_view">
+        <div id="profile_username" data-username="{{profile.username}}">{{profile.username}}</div>
+        <div id="profile_following">following <span id="profile_following_number">{{profile.following.count}}</span> users</div>
+        <div id="profile_followers">followers: <span id="profile_followers_number">{{profile.followers.count}}</span></div>
+        <button id="follow_button" data-csrf="{{ csrf_token }}">
+            {% if profile in user.following.all %}
+                unfollow
+            {% else %}
+                follow
+            {% endif %}
+        </button>
+    </div>
+{% endblock %}
