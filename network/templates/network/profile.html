@@ -5,12 +5,32 @@
         <div id="profile_username" data-username="{{profile.username}}">{{profile.username}}</div>
         <div id="profile_following">following <span id="profile_following_number">{{profile.following.count}}</span> users</div>
         <div id="profile_followers">followers: <span id="profile_followers_number">{{profile.followers.count}}</span></div>
-        <button id="follow_button" data-csrf="{{ csrf_token }}">
-            {% if profile in user.following.all %}
-                unfollow
-            {% else %}
-                follow
-            {% endif %}
-        </button>
+        {% if profile != user %}
+            <button id="follow_button" data-csrf="{{ csrf_token }}">
+                {% if profile in user.following.all %}
+                    unfollow
+                {% else %}
+                    follow
+                {% endif %}
+            </button>
+        {% endif %}
     </div>
+    <hr>
+    <br>
+    {% for opinion in profile.user_posts.all %}
+        <div>
+            <div id="username"><a href="{% url 'profile' opinion.user.username%}">{{opinion.user.username}}</a></div>
+            <div id="title">{{opinion.title}}</div>
+            <div id="tags">
+                {% for tag in opinion.tags.all %}
+                    <span>{{tag.tag}}</span>
+                {% endfor %}
+            </div>
+            <div id="body">{{opinion.body}}</div>
+            <div id="date">{{opinion.date}}</div>
+            <button id="likes">{{opinion.likes.count}}</button>
+        </div>
+    {% empty %}
+        <div>No posts by user</div>
+    {% endfor %}
 {% endblock %}

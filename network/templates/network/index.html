@@ -1,24 +1,27 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    <button id="create_opinion">New Opinion</button>
-    <form id="new_opinion" style="display: none;" method="post" action="{% url 'index' %}">
-        {% csrf_token %}
-        <div class="form-group">
-            Title:<input autofocus class="form-control" type="text" name="opinion_title" placeholder="Title" required>
-        </div>
-        <div class="form-group">
-            Body:<textarea class="form-control" name="opinion_body" placeholder="Body" required></textarea>
-        </div>
-        <div class="form-group">
-            Tags:<input autofocus class="form-control" type="text" name="opinion_tags" placeholder="Example: #Politics #Trump">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Post">
-    </form>
+    {% if user.is_authenticated and page == "AllPosts" %}
+        <button id="create_opinion">New Opinion</button>
+        <form id="new_opinion" style="display: none;" method="post" action="{% url 'index' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                Title:<input autofocus class="form-control" type="text" name="opinion_title" placeholder="Title" required>
+            </div>
+            <div class="form-group">
+                Body:<textarea class="form-control" name="opinion_body" placeholder="Body" required></textarea>
+            </div>
+            <div class="form-group">
+                Tags:<input autofocus class="form-control" type="text" name="opinion_tags" placeholder="Example: #Politics #Trump">
+            </div>
+            <input class="btn btn-primary" type="submit" value="Post">
+        </form>
+        <hr>
+    {% endif %}
     <div class="posts">
         {% for opinion in opinions %}
             <div>
-                <div id="username">{{opinion.user.username}}</div>
+                <div id="username"><a href="{% url 'profile' opinion.user.username %}">{{opinion.user.username}}</a></div>
                 <div id="title">{{opinion.title}}</div>
                 <div id="tags">
                     {% for tag in opinion.tags.all %}
@@ -27,8 +30,9 @@
                 </div>
                 <div id="body">{{opinion.body}}</div>
                 <div id="date">{{opinion.date}}</div>
-                <div id="likes">{{opinion.likes.count}}</div>
+                <button id="likes">{{opinion.likes.count}}</button>
             </div>
+            <hr>
         {% endfor %}
     </div>
     

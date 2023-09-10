@@ -9,6 +9,11 @@ from .models import User, Opinion, Tag
 
 
 def index(request):
+    if request.path == "/following":
+            return render(request, "network/index.html", {
+            "opinions" : Opinion.objects.filter(user__in = request.user.following.all())
+        })
+
     if request.method == "POST":
         opinion = Opinion()
         opinion.user = request.user
@@ -22,6 +27,7 @@ def index(request):
                 opinion.tags.add(tag)
     
     return render(request, "network/index.html", {
+        "page" : "AllPosts",
         "opinions" : Opinion.objects.all()
     })
 
@@ -84,21 +90,22 @@ def profile(request, name):
         raise Http404    
     
     if request.method == "PUT":
-        if (user in request.user.following.all()):
-            request.user.following.remove(user)
-            return JsonResponse({"performed" : "unfollow"})
-        else:
-            request.user.following.add(user)
-            return JsonResponse({"performed" : "follow"})
+        if request.headers["Source"] == "follow_unfollow":
+            if (user in request.user.following.all()):
+                request.user.following.remove(user)
+                return JsonResponse({"performed" : "unfollow"})
+            else:
+                request.user.following.add(user)
+                return JsonResponse({"performed" : "follow"})
         
-        #another method
-        # data = json.loads(request.body.decode('utf-8'))
-        # if (data.get("task") == "follow"):
-        #     request.user.following.add(user)
-        # else:
-        #     request.user.following.remove(user)
+            #another method
+            # data = json.loads(request.body.decode('utf-8'))
+            # if (data.get("task") == "follow"):
+            #     request.user.following.add(user)
+            # else:
+            #     request.user.following.remove(user)
 
-        # return JsonResponse({"performed" : data.get("task")})
+            # return JsonResponse({"performed" : data.get("task")})
     
     return render(request, "network/profile.html", {
         "profile" : user

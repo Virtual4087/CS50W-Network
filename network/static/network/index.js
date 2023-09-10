@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch("", {
             method: "PUT",
             headers: {
+                "Source": "follow_unfollow",
                 "Content-Type" : "application/json",
                 "X-CSRFToken" : this.dataset.csrf
             },
