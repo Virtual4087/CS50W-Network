@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.core.paginator import Paginator
 import json
 
 from .models import User, Opinion, Tag
@@ -11,7 +12,7 @@ from .models import User, Opinion, Tag
 def index(request):
     if request.path == "/following":
             return render(request, "network/index.html", {
-            "opinions" : Opinion.objects.filter(user__in = request.user.following.all())
+            "opinions" : Opinion.objects.filter(user__in = request.user.following.all()).order_by('-date')
         })
 
     if request.method == "POST":
@@ -28,7 +29,7 @@ def index(request):
     
     return render(request, "network/index.html", {
         "page" : "AllPosts",
-        "opinions" : Opinion.objects.all()
+        "opinions" : Opinion.objects.all().order_by('-date')
     })
 
 
@@ -108,5 +109,6 @@ def profile(request, name):
             # return JsonResponse({"performed" : data.get("task")})
     
     return render(request, "network/profile.html", {
-        "profile" : user
+        "profile" : user,
+        "profile_posts" : user.user_posts.all().order_by('-date')
     })

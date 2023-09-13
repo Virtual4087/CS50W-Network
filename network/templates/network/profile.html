@@ -17,7 +17,7 @@
     </div>
     <hr>
     <br>
-    {% for opinion in profile.user_posts.all %}
+    {% for opinion in profile_posts %}
         <div>
             <div id="username"><a href="{% url 'profile' opinion.user.username%}">{{opinion.user.username}}</a></div>
             <div id="title">{{opinion.title}}</div>
