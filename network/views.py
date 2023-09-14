@@ -8,12 +8,7 @@ import json
 
 from .models import User, Opinion, Tag
 
-
 def index(request):
-    if request.path == "/following":
-            return render(request, "network/index.html", {
-            "opinions" : Opinion.objects.filter(user__in = request.user.following.all()).order_by('-date')
-        })
 
     if request.method == "POST":
         opinion = Opinion()
@@ -26,10 +21,24 @@ def index(request):
             if i.strip():
                 tag, created = Tag.objects.get_or_create(tag=i.strip())
                 opinion.tags.add(tag)
+
+    if request.path == "/following":
+        opinions = Opinion.objects.filter(user__in = request.user.following.all()).order_by('-date')
+        current_page = "following"
+    else:
+        opinions = Opinion.objects.all().order_by('-date')
+        current_page = "index"
+
+    p = Paginator(opinions, 1)
+    try:
+        page_no = request.GET.get('page',1) 
+        page = p.page(page_no)
+    except:
+        return redirect('index')
     
     return render(request, "network/index.html", {
-        "page" : "AllPosts",
-        "opinions" : Opinion.objects.all().order_by('-date')
+        "opinions" : page,
+        "current_page" : current_page
     })
 
 
