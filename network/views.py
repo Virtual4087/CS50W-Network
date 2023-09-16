@@ -108,15 +108,23 @@ def profile(request, name):
                 request.user.following.add(user)
                 return JsonResponse({"performed" : "follow"})
         
-            #another method
-            # data = json.loads(request.body.decode('utf-8'))
-            # if (data.get("task") == "follow"):
-            #     request.user.following.add(user)
-            # else:
-            #     request.user.following.remove(user)
-
-            # return JsonResponse({"performed" : data.get("task")})
-    
+        if request.headers["Source"] == "Edit post":
+            try:
+                data = json.loads(request.body.decode('utf-8'))
+                opinion = Opinion.objects.get(id=data.get("id"))
+                opinion.title = data.get("title")
+                opinion.body = data.get("body")
+                opinion.save()
+            except:
+                return JsonResponse({"success" : False})
+            
+            return JsonResponse({
+                "success" : True,
+                "id" : data.get("id"),
+                "title" : data.get("title"),
+                "body" : data.get("body")
+            })
+        
     return render(request, "network/profile.html", {
         "profile" : user,
         "profile_posts" : user.user_posts.all().order_by('-date')

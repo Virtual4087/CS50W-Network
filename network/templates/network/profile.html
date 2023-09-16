@@ -1,11 +1,11 @@
 {% extends "network/layout.html" %}
-
+{% load static %}
 {% block body %}
     <div id="profile_view">
         <div id="profile_username" data-username="{{profile.username}}">{{profile.username}}</div>
         <div id="profile_following">following <span id="profile_following_number">{{profile.following.count}}</span> users</div>
         <div id="profile_followers">followers: <span id="profile_followers_number">{{profile.followers.count}}</span></div>
-        {% if profile != user %}
+        {% if profile != user and user.is_authenticated %}
             <button id="follow_button" data-csrf="{{ csrf_token }}">
                 {% if profile in user.following.all %}
                     unfollow
@@ -13,12 +13,12 @@
                     follow
                 {% endif %}
             </button>
-        {% endif %}
+        {% endif %} 
     </div>
     <hr>
     <br>
     {% for opinion in profile_posts %}
-        <div>
+        <div id="{{opinion.id}}" class="opinions" data-opinion_id="{{opinion.id}}">
             <div id="username"><a href="{% url 'profile' opinion.user.username%}">{{opinion.user.username}}</a></div>
             <div id="title">{{opinion.title}}</div>
             <div id="tags">
@@ -29,8 +29,111 @@
             <div id="body">{{opinion.body}}</div>
             <div id="date">{{opinion.date}}</div>
             <button id="likes">{{opinion.likes.count}}</button>
+            {% if user == opinion.user %}
+                <button id="edit_post">Edit post</button>
+            {% endif %}
         </div>
     {% empty %}
         <div>No posts by user</div>
     {% endfor %}
+    <div id="edit_view" data-id="">
+        <form id="edit_opinion">
+            <div class="form-group">
+                Title:<input autofocus class="form-control" type="text" name="opinion_title" id="edit_title" placeholder="Title" required>
+            </div>
+            <div class="form-group">
+                Body:<textarea class="form-control" name="opinion_body" id="edit_body" placeholder="Body" required></textarea>
+            </div>
+            <div class="form-group">
+                Tags:<input autofocus class="form-control" type="text" name="opinion_tags" placeholder="Example: #Politics #Trump">
+            </div>
+            <button class="btn btn-primary" data-csrf="{{csrf_token}}" id="save_edit" type="button">Save</button>
+            <button class="btn btn-light" id="cancel_edit" type="button">Cancel</button>
+        </form>
+    </div>
+
+    {% if profile != user and user.is_authenticated %}
+        <script>
+            document.querySelector("#follow_button").onclick = function() {
+                fetch("", {
+                    method: "PUT",
+                    headers: {
+                        "Source": "follow_unfollow",
+                        "Content-Type" : "application/json",
+                        "X-CSRFToken" : this.dataset.csrf
+                    },
+                    body: JSON.stringify({
+                        "task": this.innerText
+                    })
+                })
+                .then(response => {
+                    if(response.ok){
+                        return response.json()
+                    }
+                })
+                .then(data => {
+                    console.log(data)
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                });
+                
+                followers = document.querySelector("#profile_followers_number")
+                if(this.innerText === "follow"){
+                    this.innerText = "unfollow"
+                    followers.innerText = parseInt(followers.innerText) + 1
+                }
+                else{
+                    this.innerText = "follow"
+                    followers.innerText = parseInt(followers.innerText) - 1
+                }
+            }
+        </script>
+    {% elif profile == user and user.is_authenticated %}
+        <script>
+            document.querySelectorAll("#edit_post").forEach(button => {
+                button.onclick = function(){
+                    title = this.parentElement.querySelector('#title').innerText;
+                    body = this.parentElement.querySelector('#body').innerText;
+
+                    document.querySelector("#edit_view").dataset.id = this.parentElement.id;
+                    document.querySelector("#edit_title").value = title;
+                    document.querySelector("#edit_body").value = body;
+
+                    document.querySelector("#edit_view").style.display = 'flex' ;
+                }
+            });
+
+            document.querySelector("#cancel_edit").onclick = () => {
+                document.querySelector("#edit_view").style.display = 'none'
+            }
+
+            document.querySelector("#save_edit").onclick = function(){
+                fetch("", {
+                    method : "PUT",
+                    headers : {
+                        "Source" : "Edit post",
+                        "Content-Type" : "application/json",
+                        "X-CSRFToken" : this.dataset.csrf
+                    },
+                    body : JSON.stringify({
+                        id : document.querySelector("#edit_view").dataset.id,
+                        title : document.querySelector("#edit_title").value,
+                        body : document.querySelector("#edit_body").value
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    this.parentElement.parentElement.style.display = 'none'
+                    opinion = document.querySelector(`[data-opinion_id="${data.id}"]`);
+                    opinion.querySelector("#title").innerText = data.title
+                    opinion.querySelector("#body").innerText = data.body
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                });
+            }
+        </script>
+    {% endif %}
 {% endblock %}
