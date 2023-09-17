@@ -21,11 +21,6 @@
         <div id="{{opinion.id}}" class="opinions" data-opinion_id="{{opinion.id}}">
             <div id="username"><a href="{% url 'profile' opinion.user.username%}">{{opinion.user.username}}</a></div>
             <div id="title">{{opinion.title}}</div>
-            <div id="tags">
-                {% for tag in opinion.tags.all %}
-                    <span>{{tag.tag}}</span>
-                {% endfor %}
-            </div>
             <div id="body">{{opinion.body}}</div>
             <div id="date">{{opinion.date}}</div>
             <button id="likes" data-csrf="{{csrf_token}}">{{opinion.likes.count}}</button>
@@ -43,9 +38,6 @@
             </div>
             <div class="form-group">
                 Body:<textarea class="form-control" name="opinion_body" id="edit_body" placeholder="Body" required></textarea>
-            </div>
-            <div class="form-group">
-                Tags:<input autofocus class="form-control" type="text" name="opinion_tags" placeholder="Example: #Politics #Trump">
             </div>
             <button class="btn btn-primary" data-csrf="{{csrf_token}}" id="save_edit" type="button">Save</button>
             <button class="btn btn-light" id="cancel_edit" type="button">Cancel</button>

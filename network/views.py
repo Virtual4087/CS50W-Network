@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.core.paginator import Paginator
 import json
 
-from .models import User, Opinion, Tag
+from .models import User, Opinion
 
 def index(request):
 
@@ -16,11 +16,6 @@ def index(request):
         opinion.title = request.POST["opinion_title"]
         opinion.body = request.POST["opinion_body"]
         opinion.save()
-        tags = request.POST["opinion_tags"].split("#")
-        for i in tags[1:]:
-            if i.strip():
-                tag, created = Tag.objects.get_or_create(tag=i.strip())
-                opinion.tags.add(tag)
 
     if request.path == "/following":
         opinions = Opinion.objects.filter(user__in = request.user.following.all()).order_by('-date')

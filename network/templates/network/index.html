@@ -11,9 +11,6 @@
             <div class="form-group">
                 Body:<textarea class="form-control" name="opinion_body" placeholder="Body" required></textarea>
             </div>
-            <div class="form-group">
-                Tags:<input autofocus class="form-control" type="text" name="opinion_tags" placeholder="Example: #Politics #Trump">
-            </div>
             <input class="btn btn-primary" type="submit" value="Post">
         </form>
         <hr>
@@ -23,11 +20,6 @@
             <div id="{{opinion.id}}" class="opinions">
                 <div id="username"><a href="{% url 'profile' opinion.user.username %}">{{opinion.user.username}}</a></div>
                 <div id="title">{{opinion.title}}</div>
-                <div id="tags">
-                    {% for tag in opinion.tags.all %}
-                        <span>{{tag.tag}}</span>
-                    {% endfor %}
-                </div>
                 <div id="body">{{opinion.body}}</div>
                 <div id="date">{{opinion.date}}</div>
                 <button id="likes" data-csrf="{{csrf_token}}">{{opinion.likes.count}}</button>
