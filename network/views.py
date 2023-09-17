@@ -99,32 +99,13 @@ def profile(request, name):
     except User.DoesNotExist:
         raise Http404    
     
-    if request.method == "PUT":
-        if request.headers["Source"] == "follow_unfollow":
-            if (user in request.user.following.all()):
-                request.user.following.remove(user)
-                return JsonResponse({"performed" : "unfollow"})
-            else:
-                request.user.following.add(user)
-                return JsonResponse({"performed" : "follow"})
-        
-        if request.headers["Source"] == "Edit post":
-            try:
-                data = json.loads(request.body.decode('utf-8'))
-                opinion = Opinion.objects.get(id=data.get("id"))
-                opinion.title = data.get("title")
-                opinion.body = data.get("body")
-                opinion.save()
-            except:
-                return JsonResponse({"success" : False})
-            
-            return JsonResponse({
-                "success" : True,
-
-                "id" : data.get("id"),
-                "title" : data.get("title"),
-                "body" : data.get("body")
-            })
+    if request.method == "POST":
+        if (user in request.user.following.all()):
+            request.user.following.remove(user)
+            return JsonResponse({"performed" : "unfollow"})
+        else:
+            request.user.following.add(user)
+            return JsonResponse({"performed" : "follow"})
         
     return render(request, "network/profile.html", {
         "profile" : user,
@@ -139,4 +120,19 @@ def edit(request, id):
         else:
             opinion.likes.add(request.user)
         return JsonResponse({"likes" : opinion.likes.count()})
-        
+
+    if request.method == "PUT":
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            opinion = Opinion.objects.get(id=id)
+            opinion.title = data.get("title")
+            opinion.body = data.get("body")
+            opinion.save()
+        except:
+            return JsonResponse({"success" : False})
+            
+        return JsonResponse({
+            "success" : True,
+            "title" : data.get("title"),
+            "body" : data.get("body")
+        })    
