@@ -14,5 +14,5 @@ class Opinion(models.Model):
     title = models.CharField(max_length=200)
     body = models.TextField()
     tags = models.ManyToManyField(Tag, blank=True, related_name="opinion_tags")
-    likes = models.ManyToManyField(User, blank=True, related_name="liked_opinions", default=0)
+    likes = models.ManyToManyField(User, blank=True, related_name="liked_opinions")
     date = models.DateTimeField(default= timezone.now())

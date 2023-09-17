@@ -120,6 +120,7 @@ def profile(request, name):
             
             return JsonResponse({
                 "success" : True,
+
                 "id" : data.get("id"),
                 "title" : data.get("title"),
                 "body" : data.get("body")
@@ -129,3 +130,13 @@ def profile(request, name):
         "profile" : user,
         "profile_posts" : user.user_posts.all().order_by('-date')
     })
+
+def edit(request, id):
+    if request.method == "POST":
+        opinion = Opinion.objects.get(id=id)
+        if request.user in opinion.likes.all():
+            opinion.likes.remove(request.user)
+        else:
+            opinion.likes.add(request.user)
+        return JsonResponse({"likes" : opinion.likes.count()})
+        

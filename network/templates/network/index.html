@@ -30,7 +30,8 @@
                 </div>
                 <div id="body">{{opinion.body}}</div>
                 <div id="date">{{opinion.date}}</div>
-                <button id="likes">{{opinion.likes.count}}</button>
+                <button id="likes" data-csrf="{{csrf_token}}">{{opinion.likes.count}}</button>
+
             </div>
             <hr>
         {% endfor %}

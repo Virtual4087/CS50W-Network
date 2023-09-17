@@ -28,7 +28,7 @@
             </div>
             <div id="body">{{opinion.body}}</div>
             <div id="date">{{opinion.date}}</div>
-            <button id="likes">{{opinion.likes.count}}</button>
+            <button id="likes" data-csrf="{{csrf_token}}">{{opinion.likes.count}}</button>
             {% if user == opinion.user %}
                 <button id="edit_post">Edit post</button>
             {% endif %}
