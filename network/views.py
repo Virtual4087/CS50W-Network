@@ -24,7 +24,7 @@ def index(request):
         opinions = Opinion.objects.all().order_by('-date')
         current_page = "index"
 
-    p = Paginator(opinions, 1)
+    p = Paginator(opinions, 10)
     try:
         page_no = request.GET.get('page',1) 
         page = p.page(page_no)
