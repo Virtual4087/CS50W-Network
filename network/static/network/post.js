@@ -1,7 +1,7 @@
 document.querySelectorAll("#likes").forEach(element => {
     element.onclick = function(){
         const id = element.parentElement.id
-        fetch(`${id}/edit`, {
+        fetch(`/${id}/edit`, {
             method : "POST",
             headers : {
                 "Source" : "like_unlike",
