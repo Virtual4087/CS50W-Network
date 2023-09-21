@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils import timezone
 
 
 class User(AbstractUser, models.Model):
@@ -11,4 +10,4 @@ class Opinion(models.Model):
     title = models.CharField(max_length=200)
     body = models.TextField()
     likes = models.ManyToManyField(User, blank=True, related_name="liked_opinions")
-    date = models.DateTimeField(default= timezone.now())
+    date = models.DateTimeField(auto_now_add=True)

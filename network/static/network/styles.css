@@ -1,3 +1,8 @@
+body{
+    margin: 0;
+    padding: 0;
+
+}
 .posts{
     display: flex;
     flex-direction: column;
@@ -13,6 +18,43 @@
     display: none;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.644);
+    background-color: #000000a4;
     z-index: 1;
+}
+
+.top-nav{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 11;
+    background-color: white;
+}
+
+.side-nav{
+    position: fixed;
+    padding-right: 3rem;
+    padding-top: 6rem;
+    z-index: 10;
+}
+
+.sidebar{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.body{
+    padding: 2rem;
+    padding-top: 4rem;
+}
+
+#title{
+    font-size: 1.5em;
+}
+
+#body{
+    font-size: 1rem;
+}
+
+#date{
+    font-size: 0.9rem;
 }

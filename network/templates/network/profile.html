@@ -1,5 +1,4 @@
 {% extends "network/layout.html" %}
-{% load static %}
 {% block body %}
     <div id="profile_view">
         <div id="profile_username" data-username="{{profile.username}}">{{profile.username}}</div>
@@ -23,7 +22,7 @@
             <div id="title">{{opinion.title}}</div>
             <div id="body">{{opinion.body}}</div>
             <div id="date">{{opinion.date}}</div>
-            <button id="likes" data-csrf="{{csrf_token}}">{{opinion.likes.count}}</button>
+            <button id="likes" data-csrf="{{csrf_token}}"><div>{{opinion.likes.count}}</div></button>
             {% if user == opinion.user %}
                 <button id="edit_post">Edit post</button>
             {% endif %}
@@ -44,6 +43,8 @@
         </form>
     </div>
 
+    {% load static %}
+    <script src="{% static 'network/post.js' %}"></script>
     {% if profile != user and user.is_authenticated %}
         <script>
             document.querySelector("#follow_button").onclick = function() {
@@ -81,7 +82,7 @@
                 }
             }
         </script>
-    {% elif profile == user and user.is_authenticated %}
+    {% elif profile == user %}
         <script>
             document.querySelectorAll("#edit_post").forEach(button => {
                 button.onclick = function(){

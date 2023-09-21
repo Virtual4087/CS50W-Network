@@ -14,7 +14,7 @@ document.querySelectorAll("#likes").forEach(element => {
         })
         .then(response => response.json())
         .then(data => {
-            element.innerText = data.likes;
+            element.querySelector('div').innerText = data.likes;
         })
     }
 })

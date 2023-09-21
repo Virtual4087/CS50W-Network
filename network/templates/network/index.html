@@ -2,30 +2,37 @@
 
 {% block body %}
     {% if user.is_authenticated and current_page == "index" %}
-        <button id="create_opinion">New Opinion</button>
-        <form id="new_opinion" style="display: none;" method="post" action="{% url 'index' %}">
-            {% csrf_token %}
-            <div class="form-group">
-                Title:<input autofocus class="form-control" type="text" name="opinion_title" placeholder="Title" required>
-            </div>
-            <div class="form-group">
-                Body:<textarea class="form-control" name="opinion_body" placeholder="Body" required></textarea>
-            </div>
-            <input class="btn btn-primary" type="submit" value="Post">
-        </form>
-        <hr>
-    {% endif %}
-    <div class="posts">
-        {% for opinion in opinions %}
-            <div id="{{opinion.id}}" class="opinions">
-                <div id="username"><a href="{% url 'profile' opinion.user.username %}">{{opinion.user.username}}</a></div>
-                <div id="title">{{opinion.title}}</div>
-                <div id="body">{{opinion.body}}</div>
-                <div id="date">{{opinion.date}}</div>
-                <button id="likes" data-csrf="{{csrf_token}}">{{opinion.likes.count}}</button>
+        <div class="row row-cols-1">
+            <button id="create_opinion" class="col-2">New Opinion</button>
+            <form id="new_opinion" class="col form" style="display: none;" method="post" action="{% url 'index' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    Title:<input autofocus class="form-control" type="text" name="opinion_title" placeholder="Title" required>
+                </div>
+                <div class="form-group">
+                    Body:<textarea class="form-control" name="opinion_body" placeholder="Body" required></textarea>
+                </div>
+                <input class="btn btn-primary" type="submit" value="Post">
+                <button class="btn btn-outline-danger" id="cancel_post">Cancel</button>
+            </form>
+        </div>
 
+    {% endif %}
+    <div class="posts row mt-5">
+        {% for opinion in opinions %}
+            <div id="{{opinion.id}}" class="opinions col">
+                <div id="username" class="row row-cols-2">
+                    <a href="{% url 'profile' opinion.user.username %}" class="col-auto btn-link ">@{{opinion.user.username}}</a>
+                    <div id="date" class="col-auto">{{opinion.date}}</div>
+                </div>
+                <div id="title" class="row"><strong class="col">{{opinion.title}}</strong></div>
+                <div id="body" class="row"><div class="col">{{opinion.body}}</div></div>
+                {% if user.is_authenticated %}
+                    <button id="likes" data-csrf="{{csrf_token}}" class="row"><div class="col">{{opinion.likes.count}}</div></button>
+                {% else %}
+                    <button id="likes" data-csrf="{{csrf_token}}" class="row" disabled><div class="col">{{opinion.likes.count}}</div></button>
+                {%endif%}
             </div>
-            <hr>
         {% endfor %}
     </div>
     <div class="pagination">
@@ -40,10 +47,18 @@
         </div>
     </div>
 
-    <script>
+    {% if user.is_authenticated and current_page == "index" %}
+        {% load static %}
+        <script src="{% static 'network/post.js' %}"></script>
+        <script>
             document.querySelector("#create_opinion").onclick = () => {
                 document.querySelector("#new_opinion").style.display = "block";
             }
-    </script>
+            document.querySelector("#cancel_post").onclick = function() {
+                this.parentElement.style.display = "none";
+            }
+        </script>
+    {% endif %}
+
     
 {% endblock %}
