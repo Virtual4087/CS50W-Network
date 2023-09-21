@@ -16,6 +16,7 @@ def index(request):
         opinion.title = request.POST["opinion_title"]
         opinion.body = request.POST["opinion_body"]
         opinion.save()
+        return redirect('index')
 
     if request.path == "/following":
         opinions = Opinion.objects.filter(user__in = request.user.following.all()).order_by('-date')

@@ -2,11 +2,7 @@ body{
     margin: 0;
     padding: 0;
 
-}
-.posts{
-    display: flex;
-    flex-direction: column;
-    gap: 50px;
+    /* background-color: #0B1416; */
 }
 
 #edit_view{
@@ -28,13 +24,19 @@ body{
     width: 100%;
     z-index: 11;
     background-color: white;
+
+    /* background-color: #0B1416;
+    border-bottom: 1px solid #242C2E; */
 }
 
 .side-nav{
+    height: 100%;
     position: fixed;
     padding-right: 3rem;
     padding-top: 6rem;
-    z-index: 10;
+    z-index: 1;
+
+    /* border-right: 1px solid #242C2E; */
 }
 
 .sidebar{
@@ -44,17 +46,43 @@ body{
 
 .body{
     padding: 2rem;
-    padding-top: 4rem;
+    padding-top: 6rem;
 }
+
+/* black screen */
+/* .opinions{
+    border-bottom: 1px solid #242C2E;
+} */
 
 #title{
     font-size: 1.5em;
+
+    /* color: #ffffff; */
 }
 
 #body{
-    font-size: 1rem;
+    font-size: 0.9rem;
+
+    /* color: #B8C5C9; */
 }
 
 #date{
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+
+    /* color: #a0a9ac; */
+}
+
+/* black screen */
+/* .featured{
+    border-left: 1px solid #242C2E;
+} */
+
+#create_opinion{
+    height: 2.5rem;
     font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #000000;;
+    border-radius: 1rem;
 }

@@ -11,3 +11,6 @@ class Opinion(models.Model):
     body = models.TextField()
     likes = models.ManyToManyField(User, blank=True, related_name="liked_opinions")
     date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.title}'

@@ -16,21 +16,31 @@
     </div>
     <hr>
     <br>
-    {% for opinion in profile_posts %}
-        <div id="{{opinion.id}}" class="opinions" data-opinion_id="{{opinion.id}}">
-            <div id="username"><a href="{% url 'profile' opinion.user.username%}">{{opinion.user.username}}</a></div>
-            <div id="title">{{opinion.title}}</div>
-            <div id="body">{{opinion.body}}</div>
-            <div id="date">{{opinion.date}}</div>
-            <button id="likes" data-csrf="{{csrf_token}}"><div>{{opinion.likes.count}}</div></button>
-            {% if user == opinion.user %}
-                <button id="edit_post">Edit post</button>
-            {% endif %}
-        </div>
-    {% empty %}
-        <div>No posts by user</div>
-    {% endfor %}
-    <div id="edit_view" data-id="">
+
+    <div class="posts row row-cols-1 mt-5">
+        {% for opinion in profile_posts %}
+            <div id="{{opinion.id}}" data-opinion_id="{{opinion.id}}" class="opinions col border-bottom pb-3 mb-3">
+                <div id="username" class="row row-cols-2">
+                    <!-- <a href="{% url 'profile' opinion.user.username %}" class="col-auto text-dark">@{{opinion.user.username}}</a> -->
+                    <div id="date" class="col-auto">{{opinion.date}}</div>
+                    {% if user == opinion.user %}
+                        <button id="edit_post" class="col-auto ml-auto btn btn-link text-primary">Edit post</button>
+                    {% endif %}
+                </div>
+                <div id="title" class="row"><strong class="col">{{opinion.title}}</strong></div>
+                <div id="body" class="row"><div class="col">{{opinion.body}}</div></div>
+                {% if user.is_authenticated %}
+                    <button id="likes" data-csrf="{{csrf_token}}" class="row"><div class="col">{{opinion.likes.count}}</div></button>
+                {% else %}
+                    <button id="likes" data-csrf="{{csrf_token}}" class="row" disabled><div class="col">{{opinion.likes.count}}</div></button>
+                {% endif %}
+
+            </div>
+        {% empty %}
+            <div>No posts by user</div>
+        {% endfor %}
+    </div>
+    <div id="edit_view">
         <form id="edit_opinion">
             <div class="form-group">
                 Title:<input autofocus class="form-control" type="text" name="opinion_title" id="edit_title" placeholder="Title" required>
@@ -86,46 +96,44 @@
         <script>
             document.querySelectorAll("#edit_post").forEach(button => {
                 button.onclick = function(){
-                    title = this.parentElement.querySelector('#title').innerText;
-                    body = this.parentElement.querySelector('#body').innerText;
-
-                    document.querySelector("#edit_view").dataset.id = this.parentElement.id;
+                    opinion = this.parentElement.parentElement
+                    title = opinion.querySelector('#title strong').innerText;
+                    body = opinion.querySelector('#body div').innerText;
                     document.querySelector("#edit_title").value = title;
                     document.querySelector("#edit_body").value = body;
 
                     document.querySelector("#edit_view").style.display = 'flex' ;
+
+                    document.querySelector("#save_edit").onclick = function(){
+                        fetch(`/${opinion.id}/edit`, {
+                            method : "PUT",
+                            headers : {
+                                "Source" : "Edit post",
+                                "Content-Type" : "application/json",
+                                "X-CSRFToken" : this.dataset.csrf
+                            },
+                            body : JSON.stringify({
+                                title : document.querySelector("#edit_title").value,
+                                body : document.querySelector("#edit_body").value
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data)
+                            document.querySelector("#edit_view").style.display = 'none'
+                            opinion.querySelector('#title strong').innerText = data.title
+                            opinion.querySelector('#body div').innerText = data.body
+                        })
+                        .catch(error => {
+                            console.error("Fetch error:", error);
+                        });
+                    }
+
                 }
             });
 
             document.querySelector("#cancel_edit").onclick = () => {
                 document.querySelector("#edit_view").style.display = 'none'
-            }
-
-            document.querySelector("#save_edit").onclick = function(){
-                opinion_id = document.querySelector("#edit_view").dataset.id;
-                fetch(`/${opinion_id}/edit`, {
-                    method : "PUT",
-                    headers : {
-                        "Source" : "Edit post",
-                        "Content-Type" : "application/json",
-                        "X-CSRFToken" : this.dataset.csrf
-                    },
-                    body : JSON.stringify({
-                        title : document.querySelector("#edit_title").value,
-                        body : document.querySelector("#edit_body").value
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data)
-                    this.parentElement.parentElement.style.display = 'none'
-                    opinion = document.querySelector(`[data-opinion_id="${opinion_id}"]`);
-                    opinion.querySelector("#title").innerText = data.title
-                    opinion.querySelector("#body").innerText = data.body
-                })
-                .catch(error => {
-                    console.error("Fetch error:", error);
-                });
             }
         </script>
     {% endif %}
