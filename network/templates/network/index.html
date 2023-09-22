@@ -21,17 +21,25 @@
     <div class="posts row row-cols-1 mt-3">
         {% for opinion in opinions %}
             <div id="{{opinion.id}}" class="opinions col pb-3 mb-3 border-bottom">
-                <div id="username" class="row row-cols-2 mb-2">
-                    <a href="{% url 'profile' opinion.user.username %}" class="col-auto text-dark ">{{opinion.user.username}}</a>
-                    <div id="date" class="col-auto">{{opinion.date}}</div>
+                <div id="username_date" class="row row-cols-2 mb-2">
+                    <a href="{% url 'profile' opinion.user.username %}" class="col-auto text-dark " id="username">{{opinion.user.username}}</a>
+                    <div id="date" class="col-auto date_posted">{{opinion.date|date:"Y-m-d H:i:s e"}}</div>
                 </div>
                 <div id="title" class="row mb-2"><strong class="col">{{opinion.title}}</strong></div>
                 <div id="body" class="row mb-2"><div class="col">{{opinion.body}}</div></div>
+
+                <div id="likes" class="row">
                 {% if user.is_authenticated %}
-                    <button id="likes" data-csrf="{{csrf_token}}" class="row mb-2"><div class="col">{{opinion.likes.count}}</div></button>
+                    <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ml-3 btn btn-link text-dark p-0 ">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                        </svg>
+                    </button>
+                    <div id="like_count" class="col-auto pl-1 d-flex align-items-end">{{opinion.likes.count}}</div>
                 {% else %}
                     <button id="likes" data-csrf="{{csrf_token}}" class="row mb-2" disabled><div class="col">{{opinion.likes.count}}</div></button>
                 {%endif%}
+                </div>
             </div>
         {% endfor %}
     </div>

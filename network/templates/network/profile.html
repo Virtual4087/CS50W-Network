@@ -20,9 +20,9 @@
     <div class="posts row row-cols-1 mt-5">
         {% for opinion in profile_posts %}
             <div id="{{opinion.id}}" data-opinion_id="{{opinion.id}}" class="opinions col border-bottom pb-3 mb-3">
-                <div id="username" class="row row-cols-2">
+                <div id="username_date" class="row row-cols-2">
                     <!-- <a href="{% url 'profile' opinion.user.username %}" class="col-auto text-dark">@{{opinion.user.username}}</a> -->
-                    <div id="date" class="col-auto">{{opinion.date}}</div>
+                    <div id="date" class="col-auto date_posted">{{opinion.date|date:"Y-m-d H:i:s e"}}</div>
                     {% if user == opinion.user %}
                         <button id="edit_post" class="col-auto ml-auto btn btn-link text-primary">Edit post</button>
                     {% endif %}

@@ -53,6 +53,14 @@ body{
 /* .opinions{
     border-bottom: 1px solid #242C2E;
 } */
+#username{
+    font-weight: 800;
+}
+
+#username:hover{
+    text-decoration: none;
+
+}
 
 #title{
     font-size: 1.5em;
@@ -67,7 +75,7 @@ body{
 }
 
 #date{
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
 
@@ -80,6 +88,7 @@ body{
 } */
 
 #create_opinion{
+    min-width: fit-content;
     height: 2.5rem;
     font-size: 0.9rem;
     font-weight: 500;
