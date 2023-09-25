@@ -75,6 +75,13 @@ def register(request):
             return render(request, "network/register.html", {
                 "message": "Passwords must match."
             })
+        
+        #Ensure email is not already taken
+        for user in User.objects.all():
+            if user.email == email:
+                return render(request, "network/register.html", {
+                    "message": "Email already taken."
+                })
 
         # Attempt to create new user
         try:

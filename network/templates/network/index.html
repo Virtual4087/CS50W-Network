@@ -4,13 +4,13 @@
     {% if user.is_authenticated and current_page == "index" %}
         <div class="row row-cols-1">
             <button id="create_opinion" class="col-auto col-xl-2 col-lg-3 col-md-4 btn btn-block">New Opinion</button>
-            <form id="new_opinion" class="col form" style="display: none;" method="post" action="{% url 'index' %}">
+            <form id="new_opinion" class="form col mt-4 pb-4 border-bottom" style="display: none;" method="post" action="{% url 'index' %}">
                 {% csrf_token %}
                 <div class="form-group">
-                    Title:<input autofocus class="form-control" type="text" name="opinion_title" placeholder="Title" required>
+                    Title:<input autofocus class="form-control" type="text" name="opinion_title" placeholder="Title" maxlength="200" required>
                 </div>
                 <div class="form-group">
-                    Body:<textarea class="form-control" name="opinion_body" placeholder="Body" required></textarea>
+                    Body:<textarea class="form-control" name="opinion_body" placeholder="Body" rows="10" maxlength="1000" required></textarea>
                 </div>
                 <input class="btn btn-primary" type="submit" value="Post">
                 <button class="btn btn-outline-danger" id="cancel_post">Cancel</button>
@@ -20,25 +20,37 @@
     {% endif %}
     <div class="posts row row-cols-1 mt-3">
         {% for opinion in opinions %}
-            <div id="{{opinion.id}}" class="opinions col pb-3 mb-3 border-bottom">
+            <div id="{{opinion.id}}" class="opinions col pb-3 mb-3 border-bottom border-5 ">
                 <div id="username_date" class="row row-cols-2 mb-2">
-                    <a href="{% url 'profile' opinion.user.username %}" class="col-auto text-dark " id="username">{{opinion.user.username}}</a>
-                    <div id="date" class="col-auto date_posted">{{opinion.date|date:"Y-m-d H:i:s e"}}</div>
+                    <a href="{% url 'profile' opinion.user.username %}" class="col-auto text-dark pr-1" id="username">{{opinion.user.username}}</a>
+                    <div id="point" class="col-auto pr-1" style="opacity: 0.7;">•</div>
+                    <div id="date" class="col-auto date_posted pl-1">{{opinion.date|date:"Y-m-d H:i:s e"}}</div>
                 </div>
                 <div id="title" class="row mb-2"><strong class="col">{{opinion.title}}</strong></div>
                 <div id="body" class="row mb-2"><div class="col">{{opinion.body}}</div></div>
-
                 <div id="likes" class="row">
                 {% if user.is_authenticated %}
-                    <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ml-3 btn btn-link text-dark p-0 ">
+                    {% if user in opinion.likes.all %}
+                        <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ml-4 btn btn-link text-dark p-0 unlike">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                            </svg>
+                        </button>
+                    {% else %}
+                        <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ml-4 btn btn-link text-dark p-0 like">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                        </svg>  
+                        </button>
+                    {% endif %}  
+                {% else %}
+                    <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ml-4 btn btn-link text-dark p-0 " disabled>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
                             <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                        </svg>
+                        </svg>   
                     </button>
+                {% endif %}
                     <div id="like_count" class="col-auto pl-1 d-flex align-items-end">{{opinion.likes.count}}</div>
-                {% else %}
-                    <button id="likes" data-csrf="{{csrf_token}}" class="row mb-2" disabled><div class="col">{{opinion.likes.count}}</div></button>
-                {%endif%}
                 </div>
             </div>
         {% endfor %}
@@ -56,8 +68,6 @@
     </div>
 
     {% if user.is_authenticated and current_page == "index" %}
-        {% load static %}
-        <script src="{% static 'network/post.js' %}"></script>
         <script>
             document.querySelector("#create_opinion").onclick = () => {
                 document.querySelector("#new_opinion").style.display = "block";
@@ -67,6 +77,8 @@
             }
         </script>
     {% endif %}
+    {% load static %}
+    <script src="{% static 'network/post.js' %}"></script>
 
     
 {% endblock %}

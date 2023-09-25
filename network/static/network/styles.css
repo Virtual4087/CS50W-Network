@@ -1,8 +1,11 @@
 body{
     margin: 0;
     padding: 0;
-
     /* background-color: #0B1416; */
+}
+
+.btn:active, .btn:focus{
+    box-shadow: none;
 }
 
 #edit_view{
@@ -34,7 +37,7 @@ body{
     position: fixed;
     padding-right: 3rem;
     padding-top: 6rem;
-    z-index: 1;
+    z-index: 10;
 
     /* border-right: 1px solid #242C2E; */
 }
@@ -47,6 +50,8 @@ body{
 .body{
     padding: 2rem;
     padding-top: 6rem;
+    box-sizing: border-box;
+    position: relative;
 }
 
 /* black screen */
@@ -74,12 +79,11 @@ body{
     /* color: #B8C5C9; */
 }
 
-#date{
+#date, #point{
     font-size: 0.9rem;
     display: flex;
     align-items: center;
-
-    /* color: #a0a9ac; */
+    color: #383838;
 }
 
 /* black screen */
@@ -95,3 +99,18 @@ body{
     border: 1px solid #000000;;
     border-radius: 1rem;
 }
+
+#put{
+    position: relative;
+    transition: display 1s ease-in-out;
+}
+
+#lad{
+    min-width: max-content;
+    position: absolute;
+    right: 50%;
+    top: 80%;
+    display: none;
+    transition: display 1s ease-in-out;
+}
+

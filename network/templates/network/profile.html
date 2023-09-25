@@ -1,21 +1,22 @@
 {% extends "network/layout.html" %}
 {% block body %}
-    <div id="profile_view">
-        <div id="profile_username" data-username="{{profile.username}}">{{profile.username}}</div>
-        <div id="profile_following">following <span id="profile_following_number">{{profile.following.count}}</span> users</div>
-        <div id="profile_followers">followers: <span id="profile_followers_number">{{profile.followers.count}}</span></div>
-        {% if profile != user and user.is_authenticated %}
-            <button id="follow_button" data-csrf="{{ csrf_token }}">
+    <div id="profile_view" class="row row-cols-1 pb-2 border-bottom">
+        <div class="col row">
+            <h2 id="profile_username" class="col" data-username="{{profile.username}}"><b>{{profile.username}}</b></h2>
+            {% if profile != user and user.is_authenticated %}
                 {% if profile in user.following.all %}
-                    unfollow
+                    <button id="follow_button" class="col-auto btn btn-outline-danger" data-csrf="{{ csrf_token }}">unfollow</button>
                 {% else %}
-                    follow
+                    <button id="follow_button" class="col-auto btn btn-outline-primary" data-csrf="{{ csrf_token }}">follow</button>  
                 {% endif %}
-            </button>
+
         {% endif %} 
+        </div>
+        <div class="col row">
+            <div id="profile_following" class="col-auto">following: <span id="profile_following_number">{{profile.following.count}}</span></div>
+            <div id="profile_followers" class="col-auto">followers: <span id="profile_followers_number">{{profile.followers.count}}</span></div>
+        </div>
     </div>
-    <hr>
-    <br>
 
     <div class="posts row row-cols-1 mt-5">
         {% for opinion in profile_posts %}
@@ -25,16 +26,44 @@
                     <div id="date" class="col-auto date_posted">{{opinion.date|date:"Y-m-d H:i:s e"}}</div>
                     {% if user == opinion.user %}
                         <button id="edit_post" class="col-auto ml-auto btn btn-link text-primary">Edit post</button>
+                        <button id="put" class="col-auto btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                            </svg>
+                            <div class="menu border row-cols-1" id="lad">
+                                <div class="col">Edit</div>
+                                <div class="col">Delete</div>
+                            </div>
+                        </button>
+
                     {% endif %}
                 </div>
                 <div id="title" class="row"><strong class="col">{{opinion.title}}</strong></div>
                 <div id="body" class="row"><div class="col">{{opinion.body}}</div></div>
-                {% if user.is_authenticated %}
-                    <button id="likes" data-csrf="{{csrf_token}}" class="row"><div class="col">{{opinion.likes.count}}</div></button>
-                {% else %}
-                    <button id="likes" data-csrf="{{csrf_token}}" class="row" disabled><div class="col">{{opinion.likes.count}}</div></button>
-                {% endif %}
-
+                <div id="likes" class="row">
+                    {% if user.is_authenticated %}
+                        {% if user in opinion.likes.all %}
+                            <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ml-3 btn btn-link text-dark p-0 unlike">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                </svg>
+                            </button>
+                        {% else %}
+                            <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ml-3 btn btn-link text-dark p-0 like">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                                </svg>
+                            </button>
+                        {% endif %}  
+                    {% else %}
+                        <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ml-3 btn btn-link text-dark p-0 " disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                            </svg>   
+                        </button>
+                    {% endif %}
+                    <div id="like_count" class="col-auto pl-1 d-flex align-items-end">{{opinion.likes.count}}</div>
+                </div>
             </div>
         {% empty %}
             <div>No posts by user</div>
@@ -83,17 +112,27 @@
                 
                 followers = document.querySelector("#profile_followers_number")
                 if(this.innerText === "follow"){
-                    this.innerText = "unfollow"
-                    followers.innerText = parseInt(followers.innerText) + 1
+                    this.innerText = "unfollow";
+                    followers.innerText = parseInt(followers.innerText) + 1;
+                    this.classList.replace("btn-outline-primary", "btn-outline-danger")
                 }
                 else{
-                    this.innerText = "follow"
-                    followers.innerText = parseInt(followers.innerText) - 1
+                    this.innerText = "follow";
+                    followers.innerText = parseInt(followers.innerText) - 1;
+                    this.classList.replace("btn-outline-danger", "btn-outline-primary");
                 }
             }
         </script>
     {% elif profile == user %}
         <script>
+            document.querySelectorAll("#put").forEach(button => {
+                button.addEventListener("focus", function(){
+                    button.querySelector("#lad").style.display = "block";
+                }) 
+                button.addEventListener("blur", function(){
+                    button.querySelector("#lad").style.display = "none";
+                }) 
+            })
             document.querySelectorAll("#edit_post").forEach(button => {
                 button.onclick = function(){
                     opinion = this.parentElement.parentElement
