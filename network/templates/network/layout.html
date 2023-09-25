@@ -30,7 +30,7 @@
         </div>
 
         <div class="row">
-            <div class="sidebar side-nav col-3 border-right">
+            <div class="sidebar side-nav col-1 col-xl-3 border-right">
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link text-dark d-flex align-items-center" href="{% url 'index' %}">
@@ -59,12 +59,12 @@
                     {% endif %}
                 </ul>
             </div>
-            <div class="col-3"></div>
-            <div class=" body col-6 gx-4">
+            <div class="col-1 col-xl-3"></div>
+            <div class=" body col-11 col-lg-9 col-xl-6">
                 {% block body %}
                 {% endblock %}
             </div>
-            <div class="col-3 featured border-left"></div>
+            <div class="col-0 col-lg-2 col-xl-3 featured border-left"></div>
         </div>
     </body>
 </html>

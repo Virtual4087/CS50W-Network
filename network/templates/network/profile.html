@@ -2,7 +2,7 @@
 {% block body %}
     <div id="profile_view" class="row row-cols-1 pb-2 border-bottom">
         <div class="col row">
-            <h2 id="profile_username" class="col" data-username="{{profile.username}}"><b>{{profile.username}}</b></h2>
+            <h1 id="profile_username" class="col" data-username="{{profile.username}}"><b>{{profile.username}}</b></h1>
             {% if profile != user and user.is_authenticated %}
                 {% if profile in user.following.all %}
                     <button id="follow_button" class="col-auto btn btn-outline-danger" data-csrf="{{ csrf_token }}">unfollow</button>
@@ -13,8 +13,8 @@
         {% endif %} 
         </div>
         <div class="col row">
-            <div id="profile_following" class="col-auto">following: <span id="profile_following_number">{{profile.following.count}}</span></div>
-            <div id="profile_followers" class="col-auto">followers: <span id="profile_followers_number">{{profile.followers.count}}</span></div>
+            <div id="profile_followers" class="col-auto" style="font-size: 0.9rem;"><b id="profile_followers_number">{{profile.followers.count}}</b> Followers</div>
+            <div id="profile_following" class="col-auto" style="font-size: 0.9rem;"><b id="profile_following_number">{{profile.following.count}}</b> Following</div>
         </div>
     </div>
 
