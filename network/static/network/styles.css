@@ -9,19 +9,6 @@ body{
     outline: none;
 }
 
-#edit_view{
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    background-color: #000000a4;
-    z-index: 1;
-}
-
 .top-nav{
     position: fixed;
     top: 0;
@@ -33,19 +20,14 @@ body{
     border-bottom: 1px solid #242C2E; */
 }
 
-.side-nav{
+.sidebar{
     height: 100%;
     position: fixed;
-    padding-right: 3rem;
     padding-top: 6rem;
-    z-index: 10;
-
-    /* border-right: 1px solid #242C2E; */
-}
-
-.sidebar{
     display: flex;
     justify-content: flex-end;
+    z-index: 10;
+    /* border-right: 1px solid #242C2E; */
 }
 
 .body{
@@ -101,11 +83,7 @@ body{
     border-radius: 1rem;
 }
 
-#put{
-    position: relative;
-}
-
-#lad{
+#menu{
     min-width: max-content;
     position: absolute;
     right: 50%;
@@ -114,6 +92,6 @@ body{
     z-index: 1;
 }
 
-#lad a:hover{
-    background-color: #979797;
+#menu a:hover{
+    background-color: #ececec;
 }

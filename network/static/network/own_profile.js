@@ -1,6 +1,6 @@
-document.querySelectorAll("#put").forEach(button => {
+document.querySelectorAll("#toggle_menu").forEach(button => {
     button.addEventListener("blur", function(){
-        button.querySelector('#lad').classList.remove('show');
+        button.querySelector('#menu').classList.remove('show');
     }) 
 })
 document.querySelectorAll("#edit_post").forEach(button => {
@@ -10,8 +10,6 @@ document.querySelectorAll("#edit_post").forEach(button => {
         body = opinion.querySelector('#body div').innerText;
         document.querySelector("#edit_title").value = title;
         document.querySelector("#edit_body").value = body;
-
-        document.querySelector("#edit_view").style.display = 'flex' ;
 
         document.querySelector("#save_edit").onclick = function(){
             fetch(`/${opinion.id}/edit`, {
@@ -29,7 +27,6 @@ document.querySelectorAll("#edit_post").forEach(button => {
             .then(response => response.json())
             .then(data => {
                 console.log(data)
-                document.querySelector("#edit_view").style.display = 'none'
                 opinion.querySelector('#title strong').innerText = data.title
                 opinion.querySelector('#body div').innerText = data.body
             })
@@ -40,7 +37,3 @@ document.querySelectorAll("#edit_post").forEach(button => {
 
     }
 });
-
-document.querySelector("#cancel_edit").onclick = () => {
-    document.querySelector("#edit_view").style.display = 'none'
-}
