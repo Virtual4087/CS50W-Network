@@ -6,6 +6,7 @@ body{
 
 .btn:active, .btn:focus{
     box-shadow: none;
+    outline: none;
 }
 
 #edit_view{
@@ -60,11 +61,11 @@ body{
 } */
 #username{
     font-weight: 800;
+    text-decoration: none;
 }
 
 #username:hover{
     text-decoration: none;
-
 }
 
 #title{
@@ -102,7 +103,6 @@ body{
 
 #put{
     position: relative;
-    transition: display 1s ease-in-out;
 }
 
 #lad{
@@ -110,6 +110,10 @@ body{
     position: absolute;
     right: 50%;
     top: 80%;
-    display: none;
-    transition: display 1s ease-in-out;
+    background-color: white;
+    z-index: 1;
+}
+
+#lad a:hover{
+    background-color: #979797;
 }

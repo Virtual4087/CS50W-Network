@@ -25,17 +25,15 @@
                     <!-- <a href="{% url 'profile' opinion.user.username %}" class="col-auto text-dark">@{{opinion.user.username}}</a> -->
                     <div id="date" class="col-auto date_posted">{{opinion.date|date:"Y-m-d H:i:s e"}}</div>
                     {% if user == opinion.user %}
-                        <button id="edit_post" class="col-auto ml-auto btn btn-link text-primary">Edit post</button>
-                        <button id="put" class="col-auto btn">
+                        <button id="put" class="col-auto btn p-0 border-0 ms-auto" data-bs-toggle="collapse" data-bs-target="#{{opinion.id}} #lad" aria-expanded="false" aria-controls="#{{opinion.id}} #lad">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
                             <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                             </svg>
-                            <div class="menu border row-cols-1" id="lad">
-                                <div class="col">Edit</div>
-                                <div class="col">Delete</div>
+                            <div class="menu border rounded row-cols-1 collapse" id="lad">
+                                <a id="edit_post" class="col btn p-1 pb-0">Edit</a>
+                                <a id="delete_post" class="col btn p-1 pb-0">Delete</a>
                             </div>
                         </button>
-
                     {% endif %}
                 </div>
                 <div id="title" class="row"><strong class="col">{{opinion.title}}</strong></div>
@@ -43,26 +41,26 @@
                 <div id="likes" class="row">
                     {% if user.is_authenticated %}
                         {% if user in opinion.likes.all %}
-                            <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ml-3 btn btn-link text-dark p-0 unlike">
+                            <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ms-3 btn btn-link text-dark p-0 unlike">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
                                 </svg>
                             </button>
                         {% else %}
-                            <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ml-3 btn btn-link text-dark p-0 like">
+                            <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ms-3 btn btn-link text-dark p-0 like">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
                                     <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
                                 </svg>
                             </button>
                         {% endif %}  
                     {% else %}
-                        <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ml-3 btn btn-link text-dark p-0 " disabled>
+                        <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto ms-3 btn btn-link text-dark p-0 " disabled>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
                                 <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
                             </svg>   
                         </button>
                     {% endif %}
-                    <div id="like_count" class="col-auto pl-1 d-flex align-items-end">{{opinion.likes.count}}</div>
+                    <div id="like_count" class="col-auto ps-1 d-flex align-items-end">{{opinion.likes.count}}</div>
                 </div>
             </div>
         {% empty %}
@@ -85,95 +83,8 @@
     {% load static %}
     <script src="{% static 'network/post.js' %}"></script>
     {% if profile != user and user.is_authenticated %}
-        <script>
-            document.querySelector("#follow_button").onclick = function() {
-                fetch("", {
-                    method: "POST",
-                    headers: {
-                        "Source": "follow_unfollow",
-                        "Content-Type" : "application/json",
-                        "X-CSRFToken" : this.dataset.csrf
-                    },
-                    body: JSON.stringify({
-                        "task": this.innerText
-                    })
-                })
-                .then(response => {
-                    if(response.ok){
-                        return response.json()
-                    }
-                })
-                .then(data => {
-                    console.log(data)
-                })
-                .catch(error => {
-                    console.error("Fetch error:", error);
-                });
-                
-                followers = document.querySelector("#profile_followers_number")
-                if(this.innerText === "follow"){
-                    this.innerText = "unfollow";
-                    followers.innerText = parseInt(followers.innerText) + 1;
-                    this.classList.replace("btn-outline-primary", "btn-outline-danger")
-                }
-                else{
-                    this.innerText = "follow";
-                    followers.innerText = parseInt(followers.innerText) - 1;
-                    this.classList.replace("btn-outline-danger", "btn-outline-primary");
-                }
-            }
-        </script>
+        <script src="{% static 'network/other_profile.js' %}"></script>
     {% elif profile == user %}
-        <script>
-            document.querySelectorAll("#put").forEach(button => {
-                button.addEventListener("focus", function(){
-                    button.querySelector("#lad").style.display = "block";
-                }) 
-                button.addEventListener("blur", function(){
-                    button.querySelector("#lad").style.display = "none";
-                }) 
-            })
-            document.querySelectorAll("#edit_post").forEach(button => {
-                button.onclick = function(){
-                    opinion = this.parentElement.parentElement
-                    title = opinion.querySelector('#title strong').innerText;
-                    body = opinion.querySelector('#body div').innerText;
-                    document.querySelector("#edit_title").value = title;
-                    document.querySelector("#edit_body").value = body;
-
-                    document.querySelector("#edit_view").style.display = 'flex' ;
-
-                    document.querySelector("#save_edit").onclick = function(){
-                        fetch(`/${opinion.id}/edit`, {
-                            method : "PUT",
-                            headers : {
-                                "Source" : "Edit post",
-                                "Content-Type" : "application/json",
-                                "X-CSRFToken" : this.dataset.csrf
-                            },
-                            body : JSON.stringify({
-                                title : document.querySelector("#edit_title").value,
-                                body : document.querySelector("#edit_body").value
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log(data)
-                            document.querySelector("#edit_view").style.display = 'none'
-                            opinion.querySelector('#title strong').innerText = data.title
-                            opinion.querySelector('#body div').innerText = data.body
-                        })
-                        .catch(error => {
-                            console.error("Fetch error:", error);
-                        });
-                    }
-
-                }
-            });
-
-            document.querySelector("#cancel_edit").onclick = () => {
-                document.querySelector("#edit_view").style.display = 'none'
-            }
-        </script>
+        <script src="{% static 'network/own_profile.js' %}"></script>
     {% endif %}
 {% endblock %}

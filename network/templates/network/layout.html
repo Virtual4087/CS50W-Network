@@ -4,7 +4,7 @@
 <html lang="en">
     <head>
         <title>{% block title %}Social Network{% endblock %}</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/a5bfed6ea6.js" crossorigin="anonymous"></script>
         <link href="{% static 'network/styles.css' %}" rel="stylesheet">
@@ -12,7 +12,7 @@
     <body class="container-fluid">
         <div class="row">
             <div class="col p-0">
-                <nav class="top-nav navbar navbar-expand d-flex justify-content-between border-bottom pl-5 pr-5">
+                <nav class="top-nav navbar navbar-expand d-flex justify-content-between border-bottom ps-5 pe-5">
                     <a class="navbar-brand" href="#">Network</a>
                     <ul class="navbar-nav">
                         {% if user.is_authenticated %}
@@ -30,14 +30,14 @@
         </div>
 
         <div class="row">
-            <div class="sidebar side-nav col-1 col-xl-3 border-right">
+            <div class="sidebar side-nav col-1 col-xl-3 border-end">
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link text-dark d-flex align-items-center" href="{% url 'index' %}">
-                            <svg rpl="" fill="currentColor" height="20" icon-name="home-outline" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+                            <svg rps="" fill="currentColor" height="20" icon-name="home-outline" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
                                 <path d="m17.71 8.549 1.244.832v8.523a1.05 1.05 0 0 1-1.052 1.046H12.73a.707.707 0 0 1-.708-.707v-4.507c0-.76-1.142-1.474-2.026-1.474-.884 0-2.026.714-2.026 1.474v4.507a.71.71 0 0 1-.703.707H2.098a1.046 1.046 0 0 1-1.052-1.043V9.381l1.244-.835v9.158h4.44v-3.968c0-1.533 1.758-2.72 3.27-2.72s3.27 1.187 3.27 2.72v3.968h4.44V8.549Zm2.04-1.784L10.646.655a1.12 1.12 0 0 0-1.28-.008L.25 6.765l.696 1.036L10 1.721l9.054 6.08.696-1.036Z"></path>
                             </svg>
-                            <span class="pl-2">Home</span>
+                            <span class="ps-2">Home</span>
                         </a>
                     </li>
                     {% if user.is_authenticated %}
@@ -64,7 +64,7 @@
                 {% block body %}
                 {% endblock %}
             </div>
-            <div class="col-0 col-lg-2 col-xl-3 featured border-left"></div>
+            <div class="col-0 col-lg-2 col-xl-3 featured border-start"></div>
         </div>
     </body>
 </html>
