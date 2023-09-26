@@ -97,5 +97,6 @@ body{
 }
 
 .active_page{
-    background-color: #989898;
+    background-color: #e6e6e6;
+    border-radius: 1rem;
 }

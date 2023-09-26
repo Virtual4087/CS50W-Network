@@ -145,4 +145,12 @@ def edit(request, id):
             "success" : True,
             "title" : data.get("title"),
             "body" : data.get("body")
-        })    
+        })
+    
+    if request.method == "DELETE":
+        try:
+            opinion = Opinion.objects.get(id=id)
+            opinion.delete()
+            return JsonResponse({"Deletion" : "Successful"})
+        except:
+            return JsonResponse({"Deletion" : "Unsuccessful"})

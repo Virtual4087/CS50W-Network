@@ -3,6 +3,7 @@ document.querySelectorAll("#toggle_menu").forEach(button => {
         button.querySelector('#menu').classList.remove('show');
     }) 
 })
+
 document.querySelectorAll("#edit_post").forEach(button => {
     button.onclick = function(){
         opinion = this.parentElement.parentElement.parentElement.parentElement
@@ -37,3 +38,28 @@ document.querySelectorAll("#edit_post").forEach(button => {
 
     }
 });
+
+document.querySelectorAll("#delete_post").forEach(button => {
+    button.onclick = function(){
+        opinion = this.parentElement.parentElement.parentElement.parentElement
+        document.querySelector("#confirm_delete_button").onclick = function(){
+            console.log("ok")
+            fetch(`/${opinion.id}/edit`, {
+                method : "DELETE",
+                headers : {
+                    "Source" : "Delete post",
+                    "Content-Type" : "application/json",
+                    "X-CSRFToken" : this.dataset.csrf
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                opinion.style.display = "none";
+            })
+            .catch(error => {
+                console.log("Error: ", error)
+            })
+        }
+    }
+})
