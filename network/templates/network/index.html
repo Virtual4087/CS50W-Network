@@ -4,16 +4,18 @@
     {% if user.is_authenticated and current_page == "index" %}
         <div class="row row-cols-1">
             <button id="create_opinion" class="col-auto btn">New Opinion</button>
-            <form id="new_opinion" class="form col mt-4 pb-4 border-bottom" style="display: none;" method="post" action="{% url 'index' %}">
+            <form id="new_opinion" class="col mt-4 pb-4 border-bottom" style="display: none;" method="post" action="{% url 'index' %}">
                 {% csrf_token %}
-                <div class="form-group">
-                    Title:<input autofocus class="form-control" type="text" name="opinion_title" placeholder="Title" maxlength="200" required>
+                <div class="form-floating col-12 mt-3">
+                    <input autofocus class="form-control" type="text" name="opinion_title" placeholder="Title" maxlength="200" required>
+                    <label class="form-label">Title</label>
                 </div>
-                <div class="form-group">
-                    Body:<textarea class="form-control" name="opinion_body" placeholder="Body" rows="10" maxlength="1000" required></textarea>
+                <div class="form-floating col-12 mt-3">
+                    <textarea class="form-control" name="opinion_body" placeholder="Body" rows="10" maxlength="1000" style="min-height: 30vh;" required></textarea>
+                    <label class="form-label">Body</label>
                 </div>
-                <input class="btn btn-primary" type="submit" value="Post">
-                <button class="btn btn-outline-danger" id="cancel_post">Cancel</button>
+                <input class="btn btn-primary col mt-3" type="submit" value="Post">
+                <button class="btn btn-outline-danger col mt-3" id="cancel_post">Cancel</button>
             </form>
         </div>
 
@@ -55,16 +57,37 @@
             </div>
         {% endfor %}
     </div>
-    <div class="pagination">
-        page {{opinions.number}} of {{opinions.paginator.num_pages}}
-        <div>
+    <div class="Page navigation example">
+        <ul class="pagination">
             {% if opinions.has_previous %}
-                <a href="?page={{ opinions.previous_page_number }}">Previous</a>
+                <li class="page-item">
+                    <a href="?page={{ opinions.previous_page_number }}" class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
             {% endif %}
+            <li class="page-item active"><a href="" class="page-link">{{opinions.number}}</a></li>
             {% if opinions.has_next %}
-                <a href="?page={{ opinions.next_page_number }}">Next</a>
+                <li class="page-item">
+                    <a href="?page={{ opinions.next_page_number }}" class="page-link" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
             {% endif %}
-        </div>
+        </ul>
+        <div class="col">{{opinions.number}} of {{opinions.paginator.num_pages}}</div>
     </div>
 
     {% if user.is_authenticated and current_page == "index" %}

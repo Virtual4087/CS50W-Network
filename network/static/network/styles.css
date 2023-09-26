@@ -95,3 +95,7 @@ body{
 #menu a:hover{
     background-color: #ececec;
 }
+
+.active_page{
+    background-color: #989898;
+}

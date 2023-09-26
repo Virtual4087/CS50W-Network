@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
+from django.db.models import Count
 from django.http import HttpResponse, HttpResponseRedirect, Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -19,8 +20,14 @@ def index(request):
         return redirect('index')
 
     if request.path == "/following":
-        opinions = Opinion.objects.filter(user__in = request.user.following.all()).order_by('-date')
-        current_page = "following"
+        if request.user.is_authenticated:
+            opinions = Opinion.objects.filter(user__in = request.user.following.all()).order_by('-date')
+            current_page = "following"
+        else:
+            return redirect("login")
+    elif request.path == "/popular":
+        opinions = Opinion.objects.annotate(likes_count=Count('likes')).order_by('-likes_count','-date')
+        current_page = "popular"
     else:
         opinions = Opinion.objects.all().order_by('-date')
         current_page = "index"
