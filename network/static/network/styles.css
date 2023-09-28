@@ -100,3 +100,8 @@ body{
     background-color: #e6e6e6;
     border-radius: 1rem;
 }
+
+#likes{
+    max-width: fit-content;
+    background-color: #e6e6e6;
+}
