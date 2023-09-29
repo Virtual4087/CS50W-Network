@@ -3,53 +3,56 @@
 {% block body %}
     {% if user.is_authenticated and current_page == "index" %}
         <div class="row row-cols-1">
-            <button id="create_opinion" class="col-auto btn">New Opinion</button>
-            <form id="new_opinion" class="col mt-4 pb-4 border-bottom" style="display: none;" method="post" action="{% url 'index' %}">
+            <button id="create_opinion" class="col-auto btn text-light ps-3 pe-3 border rounded-5">New Opinion</button>
+            <form id="new_opinion" class="col mt-4 pb-4" style="display: none; border-bottom: 2px solid #242C2E;" method="post" action="{% url 'index' %}">
                 {% csrf_token %}
                 <div class="form-floating col-12 mt-3">
                     <input autofocus class="form-control" type="text" name="opinion_title" placeholder="Title" maxlength="200" required>
-                    <label class="form-label">Title</label>
+                    <label class="form-label" style="color: #575757;">Title</label>
                 </div>
                 <div class="form-floating col-12 mt-3">
                     <textarea class="form-control" name="opinion_body" placeholder="Body" rows="10" maxlength="1000" style="min-height: 30vh;" required></textarea>
-                    <label class="form-label">Body</label>
+                    <label class="form-label" style="color: #575757;">Body</label>
                 </div>
-                <input class="btn btn-primary col mt-3" type="submit" value="Post">
-                <button class="btn btn-outline-secondary col mt-3" id="cancel_post">Cancel</button>
+                <input class="btn col mt-3 text-light" type="submit" value="Post" style="background-color: #D13903;">
+                <button class="btn btn-secondary col mt-3" id="cancel_post">Cancel</button>
             </form>
         </div>
 
     {% endif %}
     <div class="posts row row-cols-1 mt-3">
         {% for opinion in opinions %}
-            <div id="{{opinion.id}}" class="opinions col pb-3 mb-3 border-bottom border-2 ">
+            <div id="{{opinion.id}}" class="opinions col pb-3 mb-3">
                 <div id="username_date" class="row row-cols-2 mb-2">
-                    <a href="{% url 'profile' opinion.user.username %}" class="col-auto text-dark pe-1" id="username">{{opinion.user.username}}</a>
+                    <a href="{% url 'profile' opinion.user.username %}" class="col-auto pe-1 fw-semibold" id="username">{{opinion.user.username}}</a>
                     <div id="point" class="col-auto pe-1 opacity-75">•</div>
                     <div id="date" class="col-auto date_posted ps-1">{{opinion.date|date:"Y-m-d H:i:s e"}}</div>
                 </div>
                 <div id="title" class="row mb-2"><strong class="col">{{opinion.title}}</strong></div>
                 <div id="body" class="row mb-2"><div class="col">{{opinion.body}}</div></div>
-                <div id="likes" class="row rounded p-1 ps-3 ms-1">
+                <div id="likes" class="row rounded-4 p-1 ps-3 ms-1">
                 {% if user.is_authenticated %}
                     {% if user in opinion.likes.all %}
-                        <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto btn btn-link text-dark p-0 unlike">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                        <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto btn btn-link p-0 unlike d-flex align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-big-up-filled" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="none" fill="#D13903" stroke-linecap="round" stroke-linejoin="round" style="color:#D13903 ;">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M10.586 3l-6.586 6.586a2 2 0 0 0 -.434 2.18l.068 .145a2 2 0 0 0 1.78 1.089h2.586v7a2 2 0 0 0 2 2h4l.15 -.005a2 2 0 0 0 1.85 -1.995l-.001 -7h2.587a2 2 0 0 0 1.414 -3.414l-6.586 -6.586a2 2 0 0 0 -2.828 0z" stroke-width="0" fill="currentColor" />
                             </svg>
                         </button>
                     {% else %}
-                        <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto btn btn-link text-dark p-0 like">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                        </svg>  
+                        <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto btn btn-link p-0 like d-flex align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-big-up" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M9 20v-8h-3.586a1 1 0 0 1 -.707 -1.707l6.586 -6.586a1 1 0 0 1 1.414 0l6.586 6.586a1 1 0 0 1 -.707 1.707h-3.586v8a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                            </svg>
                         </button>
                     {% endif %}
                 {% else %}
-                    <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto btn btn-link text-dark p-0 " disabled>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                        </svg>   
+                    <button id="like_icon" data-csrf="{{csrf_token}}" class="col-auto btn btn-link p-0 d-flex align-items-center" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-big-up" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M9 20v-8h-3.586a1 1 0 0 1 -.707 -1.707l6.586 -6.586a1 1 0 0 1 1.414 0l6.586 6.586a1 1 0 0 1 -.707 1.707h-3.586v8a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                        </svg>  
                     </button>
                 {% endif %}
                     <div id="like_count" class="col-auto ps-1 d-flex align-items-end">{{opinion.likes.count}}</div>
@@ -57,37 +60,26 @@
             </div>
         {% endfor %}
     </div>
-    <div class="Page navigation example">
-        <ul class="pagination">
-            {% if opinions.has_previous %}
-                <li class="page-item">
-                    <a href="?page={{ opinions.previous_page_number }}" class="page-link" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-            {% else %}
-                <li class="page-item disabled">
-                    <a class="page-link" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-            {% endif %}
-            <li class="page-item active"><a href="" class="page-link">{{opinions.number}}</a></li>
-            {% if opinions.has_next %}
-                <li class="page-item">
-                    <a href="?page={{ opinions.next_page_number }}" class="page-link" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            {% else %}
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            {% endif %}
-        </ul>
-        <div class="col">{{opinions.number}} of {{opinions.paginator.num_pages}}</div>
+    <div class="row mt-3">
+        {% if opinions.has_previous %}
+            <a href="?page={{ opinions.previous_page_number }}" class="col-4 d-flex justify-content-start">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                </svg>
+            </a>
+        {% else %}
+            <div class="col-4"></div>
+        {% endif %}
+        <div class="col-4 d-flex justify-content-center">{{opinions.number}}/{{opinions.paginator.num_pages}}</div>
+        {% if opinions.has_next %}
+            <a href="?page={{ opinions.next_page_number }}" class="col-4 d-flex justify-content-end">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                </svg>
+            </a>
+        {% else %}
+            <div class="col-4"></div>
+        {% endif %}
     </div>
 
     {% if user.is_authenticated and current_page == "index" %}
