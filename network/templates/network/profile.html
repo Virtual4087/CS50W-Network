@@ -1,8 +1,9 @@
 {% extends "network/layout.html" %}
+{% block title %}{{profile.username}}{% endblock %}
 {% block body %}
     <div id="profile_view" class="row row-cols-1 p-3 pb-4 rounded-2" style="background-color: #1A282D;">
         <div class="col row">
-            <h2 id="profile_username" class="col" data-username="{{profile.username}}"><b>{{profile.username}}</b></h2>
+            <div id="profile_username" class="col fw-bold fs-3" data-username="{{profile.username}}">{{profile.username}}</div>
             {% if profile != user and user.is_authenticated %}
                 {% if profile in user.following.all %}
                     <button id="follow_button" class="col-auto btn btn-outline-danger" data-csrf="{{ csrf_token }}">unfollow</button>
@@ -30,14 +31,21 @@
                             <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                             </svg>
                             <div class="menu rounded row-cols-1 collapse" id="menu">
-                                <a id="edit_post" class="col btn p-1 pb-0 border-0 text-light" data-bs-toggle="modal" data-bs-target="#edit_view">Edit</a>
+                                <a id="edit_post" class="col btn p-1 pb-0 border-0 text-light">Edit</a>
                                 <a id="delete_post" class="col btn p-1 pb-0 border-0 text-light" data-bs-toggle="modal" data-bs-target="#confirm_delete">Delete</a>
                             </div>
                         </button>
                     {% endif %}
                 </div>
-                <div id="title" class="row mb-2"><strong class="col">{{opinion.title}}</strong></div>
-                <div id="body" class="row mb-2"><div class="col">{{opinion.body}}</div></div>
+                <div id="title" class="row pb-2"><strong class="col">{{opinion.title}}</strong></div>
+                <div class="row mb-2" id="edit_title" style="display: none;"><textarea class="textarea fw-bold rounded">{{opinion.title}}</textarea></div>
+                <div id="body" class="row pb-2"><div class="col">{{opinion.body}}</div></div>
+                <div class="row mb-2" id="edit_body" style="display: none;"><textarea class="textarea rounded" style="font-size: 0.9rem; color: #B8C5C9;">{{opinion.body}}</textarea></div>
+                <div class="row mb-2 gap-2" id="edit_buttons" style="display: none;">
+                    <button class="btn text-light col-auto ms-auto" data-csrf="{{csrf_token}}" id="save_edit" style="background-color: #D13903;">Save</button>
+                    <button class="btn btn-secondary col-auto" id="cancel_edit" type="reset">Cancel</button>
+                </div>
+
                 <div id="likes" class="row rounded-4 p-1 ps-3 ms-1">
                     {% if user.is_authenticated %}
                         {% if user in opinion.likes.all %}
@@ -69,29 +77,6 @@
         {% empty %}
             <div>No posts by user</div>
         {% endfor %}
-    </div>
-
-    <div id="edit_view" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content" style="background-color: #142227;">
-                <div class="modal-header border-0">
-                    <div class="form-floating" style="width: 100%;">
-                        <textarea id="edit_title" class="form-control" placeholder="Title" max_length="200" rows="10" style="min-height: 10vh;"></textarea>
-                        <label class="col-form-label">Title</label>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <div class="form-floating">
-                        <textarea id="edit_body" class="form-control" placeholder="Body" rows="10" maxlength="1000" style="min-height: 30vh;"></textarea>
-                        <label class="col-form-label">Body</label>
-                    </div>
-                </div>
-                <div class="modal-footer border-0">
-                    <button class="btn text-light" data-bs-dismiss="modal" data-bs-target="#edit_view" data-csrf="{{csrf_token}}" id="save_edit" style="background-color: #D13903;">Save</button>
-                    <button class="btn btn-secondary" data-bs-dismiss="modal" data-bs-target="#edit_view" id="cancel_edit">Cancel</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="modal fade" id="confirm_delete">

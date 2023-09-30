@@ -53,6 +53,7 @@ body{
 
 #username{
     text-decoration: none;
+    font-size: 0.9rem;
     color: #A7B6BF;
 }
 
@@ -67,7 +68,6 @@ body{
 
 #body{
     font-size: 0.9rem;
-
     color: #B8C5C9;
 }
 
@@ -117,4 +117,15 @@ body{
 .page-link{
     background-color: #96280000;
     border: none;
+}
+
+.textarea{
+    width: 100%;
+    columns: auto;
+    border: 1px solid #485a5f;
+    font-size: 1.3rem;
+    color: white;
+    outline: none;
+    resize: none;
+    background-color: transparent;
 }

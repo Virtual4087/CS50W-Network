@@ -1,7 +1,9 @@
 {% extends "network/layout.html" %}
 
+{% block title %}{{current_page}}{% endblock %}
+
 {% block body %}
-    {% if user.is_authenticated and current_page == "index" %}
+    {% if user.is_authenticated and current_page == "Home" %}    
         <div class="row row-cols-1">
             <button id="create_opinion" class="col-auto btn text-light ps-3 pe-3 border rounded-5">New Opinion</button>
             <form id="new_opinion" class="col mt-4 pb-4" style="display: none; border-bottom: 2px solid #242C2E;" method="post" action="{% url 'index' %}">
@@ -17,8 +19,7 @@
                 <input class="btn col mt-3 text-light" type="submit" value="Post" style="background-color: #D13903;">
                 <button class="btn btn-secondary col mt-3" id="cancel_post">Cancel</button>
             </form>
-        </div>
-
+        </div>   
     {% endif %}
     <div class="posts row row-cols-1 mt-3">
         {% for opinion in opinions %}
@@ -82,7 +83,7 @@
         {% endif %}
     </div>
 
-    {% if user.is_authenticated and current_page == "index" %}
+    {% if user.is_authenticated and current_page == "Home" %}
         <script>
             document.querySelector("#create_opinion").onclick = () => {
                 document.querySelector("#new_opinion").style.display = "block";

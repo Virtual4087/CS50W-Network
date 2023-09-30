@@ -6,13 +6,30 @@ document.querySelectorAll("#toggle_menu").forEach(button => {
 
 document.querySelectorAll("#edit_post").forEach(button => {
     button.onclick = function(){
-        opinion = this.parentElement.parentElement.parentElement.parentElement
-        title = opinion.querySelector('#title strong').innerText;
-        body = opinion.querySelector('#body div').innerText;
-        document.querySelector("#edit_title").value = title;
-        document.querySelector("#edit_body").value = body;
+        opinion = this.parentElement.parentElement.parentElement.parentElement;
+        const title = opinion.querySelector('#title')
+        const body = opinion.querySelector('#body')
+        const likes = opinion.querySelector('#likes')
+        const edit_title = opinion.querySelector('#edit_title')
+        const edit_body = opinion.querySelector('#edit_body')
+        const edit_buttons = opinion.querySelector('#edit_buttons')
 
-        document.querySelector("#save_edit").onclick = function(){
+        if(title.style.display == 'none'){
+            return;
+        }
+
+        edit_title.querySelector('textarea').style.height = `${title.offsetHeight}px`;
+        edit_body.querySelector('textarea').style.height = body.offsetHeight + 'px';
+        title.style.display = 'none';
+        body.style.display = 'none';
+        likes.style.display = 'none';
+        edit_title.style.display = 'block';
+        edit_body.style.display = 'block';
+        edit_buttons.style.display = 'block';
+        edit_title.querySelector('textarea').value = title.innerText
+        edit_body.querySelector('textarea').value = body.innerText
+
+        opinion.querySelector("#save_edit").onclick = function(){
             fetch(`/${opinion.id}/edit`, {
                 method : "PUT",
                 headers : {
@@ -21,21 +38,36 @@ document.querySelectorAll("#edit_post").forEach(button => {
                     "X-CSRFToken" : this.dataset.csrf
                 },
                 body : JSON.stringify({
-                    title : document.querySelector("#edit_title").value,
-                    body : document.querySelector("#edit_body").value
+                    title : edit_title.querySelector('textarea').value,
+                    body : edit_body.querySelector('textarea').value
                 })
             })
             .then(response => response.json())
             .then(data => {
                 console.log(data)
-                opinion.querySelector('#title strong').innerText = data.title
-                opinion.querySelector('#body div').innerText = data.body
+                edit_title.style.display = 'none';
+                edit_body.style.display = 'none';
+                edit_buttons.style.display = 'none';
+                title.style.display = 'flex';
+                body.style.display = 'flex';
+                likes.style.display = 'flex';
+                title.querySelector('strong').innerText = data.title;
+                body.querySelector('div').innerText = data.body;
+
             })
             .catch(error => {
                 console.error("Fetch error:", error);
             });
         }
 
+        opinion.querySelector("#cancel_edit").onclick = function(){
+            edit_title.style.display = 'none';
+            edit_body.style.display = 'none';
+            edit_buttons.style.display = 'none';
+            title.style.display = 'flex';
+            body.style.display = 'flex';
+            likes.style.display = 'flex';
+        }
     }
 });
 

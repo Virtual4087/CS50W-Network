@@ -22,15 +22,15 @@ def index(request):
     if request.path == "/following":
         if request.user.is_authenticated:
             opinions = Opinion.objects.filter(user__in = request.user.following.all()).order_by('-date')
-            current_page = "following"
+            current_page = "Following"
         else:
             return redirect("login")
     elif request.path == "/popular":
         opinions = Opinion.objects.annotate(likes_count=Count('likes')).order_by('-likes_count','-date')
-        current_page = "popular"
+        current_page = "Popular"
     else:
         opinions = Opinion.objects.all().order_by('-date')
-        current_page = "index"
+        current_page = "Home"
 
     p = Paginator(opinions, 10)
     try:
@@ -137,6 +137,8 @@ def edit(request, id):
             opinion = Opinion.objects.get(id=id)
             opinion.title = data.get("title")
             opinion.body = data.get("body")
+            if opinion.title == '' or opinion.body == '' or request.user != opinion.user:
+                return JsonResponse({"success" : False})
             opinion.save()
         except:
             return JsonResponse({"success" : False})
