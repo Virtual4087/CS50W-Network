@@ -9,15 +9,15 @@
             <form id="new_opinion" class="col mt-4 pb-4" style="display: none; border-bottom: 2px solid #242C2E;" method="post" action="{% url 'index' %}">
                 {% csrf_token %}
                 <div class="form-floating col-12 mt-3">
-                    <input autofocus class="form-control" type="text" name="opinion_title" placeholder="Title" maxlength="200" required>
+                    <input autofocus class="form-control" type="text" name="opinion_title" placeholder="Title" maxlength="200" id="opinion_title" required>
                     <label class="form-label" style="color: #575757;">Title</label>
                 </div>
                 <div class="form-floating col-12 mt-3">
-                    <textarea class="form-control" name="opinion_body" placeholder="Body" rows="10" maxlength="1000" style="min-height: 30vh;" required></textarea>
+                    <textarea class="form-control" name="opinion_body" placeholder="Body" rows="10" maxlength="1000" id="opinion_body" style="min-height: 30vh;" required></textarea>
                     <label class="form-label" style="color: #575757;">Body</label>
                 </div>
                 <input class="btn col mt-3 text-light" type="submit" value="Post" style="background-color: #D13903;">
-                <button class="btn btn-secondary col mt-3" id="cancel_post">Cancel</button>
+                <button class="btn btn-secondary col mt-3" id="cancel_post" type="button">Cancel</button>
             </form>
         </div>   
     {% endif %}
@@ -89,6 +89,8 @@
                 document.querySelector("#new_opinion").style.display = "block";
             }
             document.querySelector("#cancel_post").onclick = function() {
+                this.parentElement.querySelector('#opinion_title').value = "";
+                this.parentElement.querySelector('#opinion_body').value = ""; 
                 this.parentElement.style.display = "none";
             }
         </script>
