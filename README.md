@@ -14,6 +14,13 @@
 
 - Database
    - Sqlite3
- 
+
+ # Setup Guide
+- Download the source code
+- Install Django
+- Install Sqlite3
+- Run python manage.py makemigrations
+- Run python manage.py migrate
+- Run python manage.py runserver
 
   
