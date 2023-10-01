@@ -10,6 +10,15 @@
 - Run python manage.py migrate
 - Run python manage.py runserver
 
+ # Features
+- Like and unlike posts
+- Follow and unfollow users
+- Edit and delete your posts
+- Home page that displays all the posts in reverse chornological order
+- Following page that displays only the posts made by user's following list
+- Popular page that sorts all the posts by likes
+- Profile page that shows an user's profile (Name, following, followers, posts)
+
 ## Techstack used:
 - Backend
   - Python
