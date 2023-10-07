@@ -6,6 +6,7 @@
 - Download the source code
 - Install Django
 - Install Sqlite3
+- Add your own django secret key in settings.py
 - Run python manage.py makemigrations
 - Run python manage.py migrate
 - Run python manage.py runserver
